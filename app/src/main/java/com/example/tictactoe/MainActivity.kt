@@ -163,39 +163,25 @@ fun TTT() {
 
 }
 
-fun checkEndGame(m: List<Boolean?>): Win? {
-    var win: Win? = null
-    if (
-        (m[0] == true && m[1] == true && m[2] == true) ||
-        (m[3] == true && m[4] == true && m[5] == true) ||
-        (m[6] == true && m[7] == true && m[8] == true) ||
-        (m[0] == true && m[3] == true && m[6] == true) ||
-        (m[1] == true && m[4] == true && m[7] == true) ||
-        (m[2] == true && m[5] == true && m[8] == true) ||
-        (m[0] == true && m[4] == true && m[8] == true) ||
-        (m[2] == true && m[4] == true && m[6] == true)
+fun checkEndGame(moves: List<Boolean?>): Win? {
+    val winningPositions = listOf(
+        listOf(0, 1, 2), listOf(3, 4, 5), listOf(6, 7, 8), // Rows
+        listOf(0, 3, 6), listOf(1, 4, 7), listOf(2, 5, 8), // Columns
+        listOf(0, 4, 8), listOf(2, 4, 6) // Diagonals
     )
-        win = Win.PLAYER
-    if (
-        (m[0] == false && m[1] == false && m[2] == false) ||
-        (m[3] == false && m[4] == false && m[5] == false) ||
-        (m[6] == false && m[7] == false && m[8] == false) ||
-        (m[0] == false && m[3] == false && m[6] == false) ||
-        (m[1] == false && m[4] == false && m[7] == false) ||
-        (m[2] == false && m[5] == false && m[8] == false) ||
-        (m[0] == false && m[4] == false && m[8] == false) ||
-        (m[2] == false && m[4] == false && m[6] == false)
-    )
-        win = Win.AI
-    if (win == null) {
-        var available = false
-        for (i in 0..8) {
-            available = true
+
+    for (positions in winningPositions) {
+        val (a, b, c) = positions
+        if (moves[a] != null && moves[a] == moves[b] && moves[b] == moves[c]) {
+            return if (moves[a] == true) Win.PLAYER else Win.AI
         }
-        if (!available)
-            win = Win.DRAW
     }
-    return win
+
+    if (moves.all { it != null }) {
+        return Win.DRAW
+    }
+
+    return null
 }
 
 
